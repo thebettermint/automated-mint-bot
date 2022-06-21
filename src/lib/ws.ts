@@ -37,11 +37,17 @@ class xrplSubscriptionToRegistryWS {
     this.ws.on('error', (evt: any[]) => this._onError(evt));
   };
 
+  /**
+   * Forceful disconnect from client
+   */
   public disconnect = (): void => {
     this.ws?.disconnect();
   };
 
-  //indicates that the connection is ready to send and receive data
+  /**
+   * Event indication that the client is open
+   *  Proceeds to subscribe to registry
+   */
   private async _onOpen(): Promise<void> {
     console.log('open:');
     this.ws?.request({
@@ -51,18 +57,24 @@ class xrplSubscriptionToRegistryWS {
     });
   }
 
-  //An event listener to be called when a message is received from the server
+  /**
+   * Captured emitted event on transaction message
+   */
   private async _onTx(event: any): Promise<void> {
     console.log(JSON.parse(event.data));
   }
 
-  //An event listener to be called when an error occurs. This is a simple event named "error".
+  /**
+   * Captured emitted event on error message
+   */
   private _onError(event: any[]): void {
     console.log('error:', event);
     this.ws?.disconnect();
   }
 
-  //An event listener to be called when the WebSocket connection's readyState changes to CLOSED.
+  /**
+   * Captured emitted event on close message
+   */
   private _onClose(event: number): void {
     console.log('close:', event);
   }
