@@ -1,4 +1,4 @@
-import * as registry from '../src/lib/registry';
+import * as registry from '../src/lib/helpers/registry';
 import * as constants from './constants';
 import json from './constants/registry.test.json';
 
