@@ -6,6 +6,20 @@
   "repository": "https://github.com/thebettermint/mint-bot.git",
   "author": "interc0der <intercoder@whirled.io>",
   "license": "GPL-3.0",
+  "private": true,
+  "scripts": {
+    "jest": "jest",
+    "jest:class": "jest class.test.ts",
+    "jest:obj": "jest obj.test.ts",
+    "c": "tsc",
+    "test:base": "CONFIG_ENV=base node ./scripts/test.js && tsc && jest"
+  },
+  "scriptsComments": {
+    "c": "Compiles typescript",
+    "jest": "Runs test for code within /src with current tsconfig and types",
+    "test": "Runs test compile and unit test for all predefined configuration",
+    "test:all": "Runs test compiles and unit test for all configurations within ./config directory"
+  },
   "dependencies": {
     "@thebettermint/registry": "0.0.3",
     "@thebettermint/tsconfig": "0.0.3",
@@ -25,7 +39,9 @@
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^28.1.1",
     "prettier": "^2.7.1",
+    "ts-jest": "^28.0.5",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.4"
   }
