@@ -1,3 +1,3 @@
-import * as registry from './registry';
+import * as registry from './helpers/registry';
 
 export default { registry };

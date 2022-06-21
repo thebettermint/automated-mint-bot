@@ -1,7 +1,7 @@
 /* import fs from 'fs'; */
 import { spawnSync } from 'child_process';
 /* import registryJson from "@thebettermint/registry/src/registry.json" */
-import { Registry, RegistryArray, Head, RegistryEntry } from '../../types';
+import { Registry, RegistryArray, Head, RegistryEntry } from '../../../types';
 
 /**
  * registryOrganizations
@@ -50,7 +50,7 @@ export const getOrganizationAddress = (json: Registry, ein: string) => {
     if (!registry || registry[0] === undefined) return;
 
     let filtered = registry[0].filter((org: RegistryEntry | undefined) => {
-      ein === org?.EIN;
+      return ein === org?.EIN;
     });
 
     if (filtered.length > 1)
@@ -92,7 +92,7 @@ export const getOrganizationDetailsByEIN = (json: Registry, ein: string) => {
     if (!registry || registry[0] === undefined) return;
 
     let filtered = registry[0].filter((org: RegistryEntry | undefined) => {
-      ein === org?.EIN;
+      return ein === org?.EIN;
     });
 
     if (filtered.length > 1)

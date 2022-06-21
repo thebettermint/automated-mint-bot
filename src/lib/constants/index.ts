@@ -9,3 +9,5 @@ export const wsStatusMessages = {
   tx: wsPreamble + 'The websocket has received a transaction event',
   lgr: wsPreamble + 'The websocket has received a ledger close event',
 };
+
+export const serverURL = 'wss://xls20-sandbox.rippletest.net:51233';
