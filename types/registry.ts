@@ -8,7 +8,6 @@ export interface Initiative {
 }
 
 export interface RegistryEntry {
-  type: 'registry';
   name: string;
   description: string;
   address: string;
@@ -22,7 +21,6 @@ export interface RegistryEntry {
 }
 
 export interface HeadEntry {
-  type: 'head';
   title: string;
   description: string;
 }
