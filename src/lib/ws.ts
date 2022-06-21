@@ -1,4 +1,5 @@
-import { Client, TransactionStream } from 'xrpl';
+import { Client, LedgerStream, TransactionStream } from 'xrpl';
+import { wsStatusMessages } from './constants';
 
 /**
  * xrplSubscriptionToRegistryWS
@@ -6,19 +7,29 @@ import { Client, TransactionStream } from 'xrpl';
  */
 class xrplSubscriptionToRegistryWS {
   [index: string]: any;
-  registry: string[] | undefined;
+  registry: (string | undefined)[] | undefined;
   registryAccounts: string[] | undefined;
   url: string | any;
   ws: Client | undefined;
+  test?: boolean | undefined;
 
   /**
    * Open a subsription stream with XRPLjs.
    * @param {string} url - The url to the server.
    * @param {string[]} registry - The subsription registry: List of XRPL addresses.
    */
-  constructor(url: string, registry: string[]) {
+  constructor({
+    url,
+    registry,
+    test,
+  }: {
+    url: string;
+    registry: (string | undefined)[] | undefined;
+    test?: boolean;
+  }) {
     this.registry = registry;
     this.url = url;
+    this.test = test || undefined;
     this.ws = undefined;
     this.registryAccounts = undefined;
     this._connect(url);
@@ -28,12 +39,13 @@ class xrplSubscriptionToRegistryWS {
    * Connect to client and initalize listeners
    * @param {string} url - The url to the server.
    */
-  private _connect = (url: string): void => {
+  private _connect = async (url: string): Promise<any> => {
     this.ws = new Client(url);
     this.ws.connect();
-    this.ws.on('connected', () => this._onOpen);
+    this.ws.once('connected', () => this._onConnected());
     this.ws.on('transaction', (evt: TransactionStream) => this._onTx(evt));
-    this.ws.on('disconnected', (evt: number) => this._onClose(evt));
+    this.ws.on('ledgerClosed', (evt: LedgerStream) => this._onLgr(evt));
+    this.ws.once('disconnected', (evt: number) => this._onClose(evt));
     this.ws.on('error', (evt: any[]) => this._onError(evt));
   };
 
@@ -48,11 +60,11 @@ class xrplSubscriptionToRegistryWS {
    * Event indication that the client is open
    *  Proceeds to subscribe to registry
    */
-  private async _onOpen(): Promise<void> {
-    console.log('open:');
+  private _onConnected(): void {
+    if (this.test) this.ws?.emit(wsStatusMessages.connected);
+    console.log(this.registry);
     this.ws?.request({
       command: 'subscribe',
-      accounts: this.registryAccounts || null,
       streams: ['transactions', 'ledger'],
     });
   }
@@ -60,15 +72,27 @@ class xrplSubscriptionToRegistryWS {
   /**
    * Captured emitted event on transaction message
    */
-  private async _onTx(event: any): Promise<void> {
-    console.log(JSON.parse(event.data));
+  private _onTx(event: any): void {
+    if (this.test) this.ws?.emit(wsStatusMessages.tx, event);
+    console.log('tx received');
+    //console.log(event);
+  }
+
+  /**
+   * Captured emitted event on ledger message
+   */
+  private _onLgr(event: any): void {
+    if (this.test) this.ws?.emit(wsStatusMessages.lgr, event);
+    console.log('lgr received');
+    //console.log(event);
   }
 
   /**
    * Captured emitted event on error message
    */
   private _onError(event: any[]): void {
-    console.log('error:', event);
+    if (this.test) this.ws?.emit(wsStatusMessages.error, event);
+    console.log(event);
     this.ws?.disconnect();
   }
 
@@ -76,7 +100,8 @@ class xrplSubscriptionToRegistryWS {
    * Captured emitted event on close message
    */
   private _onClose(event: number): void {
-    console.log('close:', event);
+    if (this.test) this.ws?.emit(wsStatusMessages.closed, event);
+    console.log(event);
   }
 }
 
