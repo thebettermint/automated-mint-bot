@@ -74,8 +74,6 @@ class xrplSubscriptionToRegistryWS {
    */
   private _onTx(event: any): void {
     if (this.test) this.ws?.emit(wsStatusMessages.tx, event);
-    console.log('tx received');
-    //console.log(event);
   }
 
   /**
@@ -83,8 +81,6 @@ class xrplSubscriptionToRegistryWS {
    */
   private _onLgr(event: any): void {
     if (this.test) this.ws?.emit(wsStatusMessages.lgr, event);
-    console.log('lgr received');
-    //console.log(event);
   }
 
   /**
@@ -101,7 +97,6 @@ class xrplSubscriptionToRegistryWS {
    */
   private _onClose(event: number): void {
     if (this.test) this.ws?.emit(wsStatusMessages.closed, event);
-    console.log(event);
   }
 }
 
