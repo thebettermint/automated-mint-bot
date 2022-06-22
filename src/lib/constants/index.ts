@@ -11,3 +11,4 @@ export const wsStatusMessages = {
 };
 
 export const serverURL = 'wss://xls20-sandbox.rippletest.net:51233';
+export const mainServerURL = 'wss://s1.ripple.com/';
