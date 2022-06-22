@@ -23,12 +23,15 @@
   "dependencies": {
     "@thebettermint/registry": "0.0.3",
     "@thebettermint/tsconfig": "0.0.3",
+    "axios": "^0.27.2",
     "fs": "^0.0.1-security",
+    "lodash": "^4.17.21",
     "path": "^0.12.7",
     "xrpl": "^2.3.0"
   },
   "devDependencies": {
     "@types/jest": "^28.1.2",
+    "@types/lodash": "^4.14.182",
     "@types/node": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
