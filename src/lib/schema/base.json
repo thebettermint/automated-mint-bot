@@ -1,0 +1,6 @@
+{
+  "schema": "URI://UriToBase.v0Schema",
+  "nftType": "base.v0",
+  "name": "Base NFT",
+  "description": "An NFT using schemas."
+}

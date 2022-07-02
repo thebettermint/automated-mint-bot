@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://yourdomain.com/schemas/xrartschema.json",
+  "type": "object",
+  "required": ["schema", "type", "name", "description", "image"],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "format": "uri"
+    },
+    "nftType": {
+      "type": "string",
+      "pattern": "^(\\([a-zA-Z]+.v[0-9]+$"
+    },
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "image": {
+      "type": "string",
+      "contentMediaType": "image/png",
+      "format": "uri"
+    },
+    "animation_url": {
+      "type": "string",
+      "contentMediaType": "video/mp4",
+      "format": "uri"
+    },
+    "video": {
+      "type": "string",
+      "contentMediaType": "video/mp4",
+      "format": "uri"
+    },
+    "audio": {
+      "type": "string",
+      "contentMediaType": "audio/mpeg",
+      "format": "uri"
+    },
+    "file": {
+      "type": "string",
+      "format": "uri"
+    },
+    "collection": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "family": { "type": "string" }
+      },
+      "required": ["name"]
+    },
+    "attributes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "value": { "type": ["string", "int", "float"] }
+        },
+        "required": ["name", "value"]
+      }
+    }
+  }
+}
