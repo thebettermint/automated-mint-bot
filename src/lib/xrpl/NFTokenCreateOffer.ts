@@ -1,14 +1,15 @@
 import {
   Wallet,
-  NFTokenCreateOfferFlags,
   Client,
+  NFTokenCreateOfferFlags,
   NFTokenCreateOffer,
 } from 'xrpl';
-require('dotenv').config();
 
-const key = process.env['ISSUER_SECRET'];
+import env from '../helpers/env';
 
-const nftTransfer = async ({
+const key = env['ISSUER_SECRET'];
+
+export const nftTransfer = async ({
   api,
   destination,
   id,
@@ -17,42 +18,41 @@ const nftTransfer = async ({
   destination: string;
   id: string;
 }) => {
-  let signer;
-  if (key) signer = Wallet.fromSecret(key);
-  if (!signer) throw Error;
+  if (!key) return;
+  try {
+    let signer = Wallet.fromSecret(key);
 
-  let transaction: NFTokenCreateOffer = {
-    TransactionType: 'NFTokenCreateOffer',
-    Account: signer.classicAddress,
-    Amount: '0',
-    NFTokenID: id,
-    Destination: destination,
-    Flags: NFTokenCreateOfferFlags.tfSellNFToken,
-  };
+    let transaction: NFTokenCreateOffer = {
+      TransactionType: 'NFTokenCreateOffer',
+      Account: signer.classicAddress,
+      Amount: '0',
+      NFTokenID: id,
+      Destination: destination,
+      Flags: NFTokenCreateOfferFlags.tfSellNFToken,
+    };
 
-  let opts = {
-    autfill: false,
-    failhard: true,
-    wallet: signer,
-  };
+    let opts = {
+      autfill: false,
+      failhard: true,
+      wallet: signer,
+    };
 
-  let tx: any = await api.submitAndWait(transaction, opts);
+    let tx: any = await api.submitAndWait(transaction, opts);
 
-  let OfferId = tx.result.meta.AffectedNodes.map((n: any) => {
-    let data;
-    let affNode = n;
-    if (
-      affNode.CreatedNode &&
-      affNode.CreatedNode.LedgerEntryType == 'NFTokenOffer'
-    ) {
-      data = affNode.CreatedNode.LedgerIndex;
-    }
-    return data;
-  }).filter((item: any) => item != undefined);
+    let OfferId = tx.result.meta.AffectedNodes.map((n: any) => {
+      let data;
+      let affNode = n;
+      if (
+        affNode.CreatedNode &&
+        affNode.CreatedNode.LedgerEntryType == 'NFTokenOffer'
+      ) {
+        data = affNode.CreatedNode.LedgerIndex;
+      }
+      return data;
+    }).filter(Boolean);
 
-  console.log(OfferId);
-
-  return OfferId[0];
+    return OfferId[0];
+  } catch (error: any) {
+    return Error(error.message);
+  }
 };
-
-export default { nftTransfer };
