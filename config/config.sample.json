@@ -1,0 +1,16 @@
+[
+  {
+    "network": "wss://s.altnet.rippletest.net:51233",
+    "registry": ["rDXNoqj7wwE3DShsrAm6USRLHKB762AsVJ"],
+    "db": {
+      "name": "",
+      "port": 27017,
+      "rootKey": "root",
+      "rootSecret": "super_secret_password",
+      "userKey": "",
+      "userSecret": "",
+      "ip": "127.0.0.1",
+      "uri": null
+    }
+  }
+]
