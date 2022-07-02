@@ -803,10 +803,10 @@
   resolved "https://npm.pkg.github.com/download/@thebettermint/tsconfig/0.0.3/311b46e2baf5e14692740f5f251b5cbfdc861a98270b9733e0d3dac20f7a4743#330ecdcbb242430dc268e8a49d182982967473d5"
   integrity sha512-FDOVYD5PONygSuyesU9sRw7YowzrWtVIYkQeUOI0PiK2P5TwVD8DJX693yn9afUsLC6VdRjUVZ0uzcJMZx2+8A==
 
-"@thebettermint/xrpl-tx-parser@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@thebettermint/xrpl-tx-parser/-/xrpl-tx-parser-0.0.5.tgz#087556ecaac24bc293ea7210ebcb8076218e7fc1"
-  integrity sha512-uOCT/Adb3jY80iQGiSauOE/yqRbZPZ3aewIfuIM/tRNZcQe3bx7aa503a5oJ9zqx1ZuaJJyHyGvfcp1EHFkGFw==
+"@thebettermint/xrpl-tx-parser@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@thebettermint/xrpl-tx-parser/-/xrpl-tx-parser-0.0.6.tgz#4a93b607608ac2d681fd179f323b3d4b948433ab"
+  integrity sha512-TOUO/OgoiyEh/BYU6nKVBWHZ9525m+Faq/PYxxki/5TkrHB4bCF7QoJW9Zjy0RZonJzbqvZ1nXfsS094pnzorQ==
   dependencies:
     "@thebettermint/tsconfig" "0.0.3"
     assert "^2.0.0"
