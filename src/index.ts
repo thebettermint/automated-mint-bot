@@ -5,6 +5,8 @@ import Client, { constants } from '@thebettermint/xrpl-tx-parser';
 import config from '../config/config.json';
 import parse from './lib/parse';
 import ipfs from './lib/utils/ipfs';
+import x from './lib/xrpl';
+import linkService from './lib/services/link.service';
 
 const main = () => {
   const registryAddresses = lib.registry.getAddressArrayRegistry(json);
@@ -31,9 +33,29 @@ const main = () => {
     console.log(events.connected);
   };
 
-  const _onTx = (e: any) => {
+  const _onTx = async (e: any) => {
     let meta = parse.TXtoCreditMetadata(e);
-    if (meta) ipfs.handleUploadToIpfs(meta);
+    if (!meta) return;
+    let hash = await ipfs.handleUploadToIpfs(meta);
+    console.log(hash);
+    let nft = await x.nftCreate({ api: api.ws, uri: hash });
+    if (!nft) return;
+
+    let id = await x.nftTransfer({
+      api: api.ws,
+      destination: meta.file.donor,
+      id: nft[1],
+    });
+    console.log({
+      hash: meta.file.hash,
+      tokenId: nft[1],
+      offerId: id,
+    });
+    linkService.add({
+      hash: meta.file.hash,
+      tokenId: nft[1],
+      offerId: id,
+    });
     return;
   };
 
