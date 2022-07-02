@@ -1,7 +1,13 @@
 /* import fs from 'fs'; */
 import { spawnSync } from 'child_process';
 /* import registryJson from "@thebettermint/registry/src/registry.json" */
-import { Registry, RegistryArray, Head, RegistryEntry } from '../../../types';
+import {
+  Registry,
+  RegistryArray,
+  Head,
+  RegistryEntry,
+  Initiative,
+} from '../../../types';
 
 /**
  * registryOrganizations
@@ -192,4 +198,138 @@ export const determineVersionOfRegistry = () => {
     .filter((output) => output.length > 0)
     .map((output) => output.split('@')[1].replace('"', ''));
   return parsedOutputArray[0];
+};
+
+/**
+ * getOrganizationDetailsByAddress
+ *
+ * @param { Registry } json - Total registry including document head
+ * @param { string } ein - Employer identifcation number of organization
+ *
+ * @return { RegistryEntry } - Organization's registry entry
+ */
+export const getOrganizationDetailsByAddress = (
+  json: Registry,
+  address: string
+) => {
+  try {
+    const registry = json
+      .map((obj: RegistryArray | Head) => {
+        if ('registry' in obj) return obj.registry;
+        return undefined;
+      })
+      .filter(Boolean);
+
+    if (!registry || registry[0] === undefined) return;
+
+    let filtered = registry[0].filter((org: RegistryEntry | undefined) => {
+      return address === org?.address;
+    });
+
+    if (filtered.length > 1)
+      throw Error(
+        'Duplicate organizations with the same ein in registry. Please refer to repo and contact package maintainer'
+      );
+
+    let org = filtered[0];
+    return org;
+  } catch (error: any) {
+    return Error(error.msg);
+  }
+};
+
+/**
+ * getInitiativeByTag
+ *
+ * @param { Registry } json - Total registry including document head
+ * @param { string } ein - Employer identifcation number of organization
+ *
+ * @return { RegistryEntry } - Organization's registry entry
+ */
+export const getInitiativeByTag = (initiatives: any, tag: number) => {
+  try {
+    let filtered = initiatives.filter((init: Initiative | undefined) => {
+      return tag === init?.tag;
+    });
+
+    if (filtered.length > 1)
+      throw Error(
+        'Duplicate inititative with the same tag in registry. Please refer to repo and contact package maintainer'
+      );
+
+    let org = filtered[0];
+    return org;
+  } catch (error: any) {
+    return Error(error.msg);
+  }
+};
+
+/**
+ * getInitiativeByTag
+ *
+ * @param { Registry } json - Total registry including document head
+ * @param { string } ein - Employer identifcation number of organization
+ *
+ * @return { RegistryEntry } - Organization's registry entry
+ */
+export const getTierByAmount = (
+  tiers: any,
+  amount: { counterparty: string; currency: string; value: string }
+) => {
+  try {
+    let { counterparty, currency, value } = amount;
+    let parsedValue = parseFloat(value);
+
+    let filtered = tiers
+      .map((tier: any | undefined) => {
+        if (
+          currency === tier.amount.currency &&
+          counterparty === tier.amount.issuer &&
+          parsedValue > tier.amount.value
+        )
+          return tier;
+        return;
+      })
+      .filter(Boolean);
+
+    return filtered;
+  } catch (error: any) {
+    return;
+  }
+};
+
+/**
+ * getAssetByDonationAmount
+ *
+ * @param { Registry } json - Total registry including document head
+ * @param { string } ein - Employer identifcation number of organization
+ *
+ * @return { RegistryEntry } - Organization's registry entry
+ */
+export const getAssetByDonationAmount = ({
+  organization,
+  initiative,
+  amount,
+}: {
+  organization: any;
+  initiative: any;
+  amount: { counterparty: string; currency: string; value: string };
+}) => {
+  try {
+    if (!initiative) return organization.image;
+    if (!initiative.tiers && initiative.defaultAsset)
+      return initiative.defaultAsset;
+
+    if (!initiative.tiers && !initiative.defaultAsset)
+      return organization.image;
+
+    if (initiative.tiers) {
+      let tier = getTierByAmount(initiative.tiers, amount);
+      if (tier[0]) return tier[0].asset;
+      if (!tier[0]) return initiative.defaultAsset;
+    }
+    throw Error('Trouble getting image for donation');
+  } catch (error: any) {
+    return Error(error.msg);
+  }
 };
