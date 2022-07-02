@@ -1,26 +1,17 @@
 version: '3.8'
 
 services:
-  api:
-    container_name: api
-    build:
-      dockerfile: Dockerfile.api
-      context: '.'
+  mongo:
+    image: 'mongo'
+    container_name: xaddress_manager_db
+    restart: always
     volumes:
-      - /app/node_modules
-      - ./api:/app
+      - ./db/data:/data/db
+    ports:
+      - 27017:27017
     environment:
-      API_HOST: ${API_HOST}
-      API_PORT: ${API_PORT}
-      API_KEY: ${API_KEY}
-      API_SECRET: ${API_SECRET}
-      GATEWAY: ${GATEWAY}
-      PAYMENT_ADDRESS: ${PAYMENT_ADDRESS}
-      ISSUER_ADDRESS: ${ISSUER_ADDRESS}
-      ISSUER_SECRET: ${ISSUER_SECRET}
-      IPFS_DOMAIN: ${IPFS_DOMAIN}
-      IPFS_PORT: ${IPFS_PORT}
-      API_WS_PORT: ${API_WS_PORT}
+      MONGO_INITDB_ROOT_USERNAME: 'root'
+      MONGO_INITDB_ROOT_PASSWORD: 'super_secret_password'
 
   ipfs:
     image: 'ipfs/go-ipfs:v0.10.0'
