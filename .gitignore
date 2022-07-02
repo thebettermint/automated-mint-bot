@@ -110,5 +110,8 @@ dist
 config.json
 config.backup.json
 
-# Docker mongodb
+# Docker ipfs
 ipfs
+
+# Docker mongodb
+db
