@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: api
+    build:
+      dockerfile: Dockerfile.api
+      context: '.'
+    volumes:
+      - /app/node_modules
+      - ./api:/app
+    environment:
+      API_HOST: ${API_HOST}
+      API_PORT: ${API_PORT}
+      API_KEY: ${API_KEY}
+      API_SECRET: ${API_SECRET}
+      GATEWAY: ${GATEWAY}
+      PAYMENT_ADDRESS: ${PAYMENT_ADDRESS}
+      ISSUER_ADDRESS: ${ISSUER_ADDRESS}
+      ISSUER_SECRET: ${ISSUER_SECRET}
+      IPFS_DOMAIN: ${IPFS_DOMAIN}
+      IPFS_PORT: ${IPFS_PORT}
+      API_WS_PORT: ${API_WS_PORT}
+
+  ipfs:
+    image: 'ipfs/go-ipfs:v0.10.0'
+    container_name: ipfs
+    volumes:
+      - ./ipfs/ipfs_staging:/export
+      - ./ipfs/ipfs_data:/data/ipfs
+    ports:
+      - ${IPFS_SWARM_PORT}:${IPFS_SWARM_PORT}/tcp
+      - ${IPFS_SWARM_PORT}:${IPFS_SWARM_PORT}/udp
+      - ${IPFS_API}:${IPFS_API}
+      - ${IPFS_LOCAL_GATEWAY}:${IPFS_LOCAL_GATEWAY}
+      - 0.0.0.0:${IPFS_WS}:${IPFS_WS}
+    environment:
+      IPFS_PROFILE: 'server'
+      IPFS_PATH: '/data/ipfs'
