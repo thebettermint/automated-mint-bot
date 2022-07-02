@@ -1,7 +1,6 @@
 [
   {
     "network": "wss://s.altnet.rippletest.net:51233",
-    "registry": ["rDXNoqj7wwE3DShsrAm6USRLHKB762AsVJ"],
     "db": {
       "name": "",
       "port": 27017,
