@@ -115,3 +115,9 @@ ipfs
 
 # Docker mongodb
 db
+
+# Ignore api
+api/config/config.json
+api/config/config.backup.json
+
+docker-compose.yml.bk

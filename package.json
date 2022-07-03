@@ -12,6 +12,8 @@
     "jest:class": "jest class.test.ts",
     "jest:obj": "jest obj.test.ts",
     "c": "tsc",
+    "c:api": "cd api && tsc",
+    "start:api": "cd api/dist && node index.js",
     "test:base": "CONFIG_ENV=base node ./scripts/test.js && tsc && jest"
   },
   "scriptsComments": {
