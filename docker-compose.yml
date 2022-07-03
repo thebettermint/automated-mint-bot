@@ -3,7 +3,7 @@ version: '3.8'
 services:
   mongo:
     image: 'mongo'
-    container_name: xaddress_manager_db
+    container_name: mintbot-db
     restart: always
     volumes:
       - ./db/data:/data/db
@@ -15,7 +15,7 @@ services:
 
   ipfs:
     image: 'ipfs/go-ipfs:v0.10.0'
-    container_name: ipfs
+    container_name: mintbot-ipfs
     volumes:
       - ./ipfs/ipfs_staging:/export
       - ./ipfs/ipfs_data:/data/ipfs
@@ -28,3 +28,17 @@ services:
     environment:
       IPFS_PROFILE: 'server'
       IPFS_PATH: '/data/ipfs'
+
+  api:
+    container_name: mintbot-api
+    build:
+      dockerfile: Dockerfile.api
+      context: '.'
+    ports:
+      - ${API_PORT}:${API_PORT}
+    volumes:
+      - /app/node_modules
+      - .:/app
+    environment:
+      API_PORT: ${API_PORT}
+      API_SECRET: ${API_SECRET}

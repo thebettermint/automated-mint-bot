@@ -1,0 +1,24 @@
+FROM node:alpine as build
+
+WORKDIR /app
+
+COPY package.json /
+COPY . /
+
+RUN npm install
+
+CMD ["npm", "run", "c:api"]
+
+
+
+FROM node:alpine
+
+WORKDIR /app
+
+COPY package.json /
+COPY . /
+
+RUN npm install
+COPY --from=build /api/dist /api/dist
+
+CMD ["npm", "run", "start:api"]
