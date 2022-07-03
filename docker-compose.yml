@@ -22,7 +22,7 @@ services:
     ports:
       - ${IPFS_SWARM_PORT}:${IPFS_SWARM_PORT}/tcp
       - ${IPFS_SWARM_PORT}:${IPFS_SWARM_PORT}/udp
-      - ${IPFS_API}:${IPFS_API}
+      - 0.0.0.0:${IPFS_API}:${IPFS_API}
       - ${IPFS_LOCAL_GATEWAY}:${IPFS_LOCAL_GATEWAY}
       - 0.0.0.0:${IPFS_WS}:${IPFS_WS}
     environment:
@@ -38,7 +38,19 @@ services:
       - ${API_PORT}:${API_PORT}
     volumes:
       - /app/node_modules
-      - .:/app
+      - /app
+    environment:
+      API_PORT: ${API_PORT}
+      API_SECRET: ${API_SECRET}
+
+  bot:
+    container_name: mintbot-bot
+    build:
+      dockerfile: Dockerfile
+      context: '.'
+    volumes:
+      - /app/node_modules
+      - /app
     environment:
       API_PORT: ${API_PORT}
       API_SECRET: ${API_SECRET}

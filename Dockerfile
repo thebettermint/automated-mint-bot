@@ -19,4 +19,4 @@ COPY --from=build /app/dist /app/dist
 
 RUN npm install
 
-CMD ["npm", "run", "start:api"]
+CMD ["npm", "run", "start:bot"]

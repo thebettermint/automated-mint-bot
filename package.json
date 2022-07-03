@@ -1,9 +1,9 @@
 {
-  "name": "mint-bot",
+  "name": "xrpl-mint-bot",
   "version": "0.0.1",
   "description": "An automated minting bot for nonfungible tax credits",
-  "main": "dist/index.js",
-  "repository": "https://github.com/thebettermint/mint-bot.git",
+  "main": "dist/src/index.js",
+  "repository": "https://github.com/thebettermint/xrpl-mint-bot.git",
   "author": "interc0der <intercoder@whirled.io>",
   "license": "GPL-3.0",
   "private": true,
@@ -11,9 +11,10 @@
     "jest": "jest",
     "jest:class": "jest class.test.ts",
     "jest:obj": "jest obj.test.ts",
-    "c": "tsc",
-    "c:api": "cd api && tsc",
-    "start:api": "cd api/dist && node index.js",
+    "c": "rimraf ./dist && tsc && cp .env ./dist/.env",
+    "start:api": "node ./dist/src/api/index.js",
+    "start:bot": "node ./dist/src/index.js",
+    "start": "npm run start:api & npm run start:bot",
     "test:base": "CONFIG_ENV=base node ./scripts/test.js && tsc && jest"
   },
   "scriptsComments": {
@@ -41,6 +42,7 @@
     "mongodb": "^4.7.0",
     "mongoose": "^6.4.1",
     "path": "^0.12.7",
+    "typescript": "^4.7.4",
     "xrpl": "^2.3.0"
   },
   "devDependencies": {
@@ -62,8 +64,6 @@
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^28.1.1",
     "prettier": "^2.7.1",
-    "ts-jest": "^28.0.5",
-    "ts-node": "^10.8.1",
-    "typescript": "^4.7.4"
+    "ts-jest": "^28.0.5"
   }
 }

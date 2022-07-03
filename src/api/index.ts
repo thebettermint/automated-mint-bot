@@ -6,9 +6,9 @@ import path from 'path';
 
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import errorHandler from './src//middleware/error';
+import errorHandler from './middleware/error';
 
-import env from './src/helpers/env';
+import env from './helpers/env';
 
 const port = env['API_PORT'] || 4005;
 
@@ -30,8 +30,8 @@ app.use(constants.routes, express.json({ limit: '1mb' }));
 
 // api routes
 /* app.use('/', require(path.join(__dirname, 'src', 'routes', 'root.routes.ts'))); */
-app.use('/link', require(path.join(__dirname, 'src', 'routes', 'link.routes')));
-app.use('/pin', require(path.join(__dirname, 'src', 'routes', 'pin.routes')));
+app.use('/link', require(path.join(__dirname, 'routes', 'link.routes')));
+app.use('/pin', require(path.join(__dirname, 'routes', 'pin.routes')));
 
 app.use(errorHandler);
 

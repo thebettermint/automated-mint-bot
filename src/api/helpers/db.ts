@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { MongoClientOptions } from 'mongodb';
-import config from '../../config/config.json';
+import config from '../../../config/config.json';
 
 interface ConnectOptions extends MongoClientOptions {
   /** Set to false to [disable buffering](http://mongoosejs.com/docs/faq.html#callback_never_executes) on all models associated with this connection. */
