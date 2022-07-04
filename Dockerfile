@@ -2,11 +2,10 @@ FROM node:alpine as build
 
 WORKDIR /app
 
-COPY . ./
+COPY ./ ./
 
 RUN npm install
-
-CMD ["npm", "run", "c"]
+RUN npm run c
 
 
 FROM node:alpine
@@ -15,7 +14,7 @@ WORKDIR /app
 
 COPY package.json ./
 
-COPY --from=build /app/dist /app/dist
+COPY --from=build /app/dist ./dist
 
 RUN npm install
 
