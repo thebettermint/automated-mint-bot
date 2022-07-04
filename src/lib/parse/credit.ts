@@ -1,6 +1,6 @@
 import lib from '../../lib';
-import { PaymentInterface } from '@thebettermint/xrpl-tx-parser';
-import json from '@thebettermint/registry/src/registry.json';
+import { PaymentInterface } from '../../../types/parser';
+import json from '@thebettermint/registry';
 import { rippleTimeToUnixTime } from 'xrpl';
 
 export const TXtoCreditMetadata = (tx: PaymentInterface) => {
@@ -15,6 +15,8 @@ export const TXtoCreditMetadata = (tx: PaymentInterface) => {
     tx.destination_tag
   );
 
+  if (initiative instanceof Error) return;
+
   let image = lib.registry.getAssetByDonationAmount({
     organization: organization,
     initiative: initiative,
@@ -22,9 +24,10 @@ export const TXtoCreditMetadata = (tx: PaymentInterface) => {
   });
 
   let tier = lib.registry.getTierByAmount(
-    initiative.tiers,
+    initiative?.tiers,
     tx.destination_balance_changes[0]
   );
+
   let { counterparty, currency, value } = tx.destination_balance_changes[0];
 
   return {
@@ -42,17 +45,17 @@ export const TXtoCreditMetadata = (tx: PaymentInterface) => {
         value: parseFloat(value),
       },
       time: rippleTimeToUnixTime(tx.time),
-      initiative: initiative.title,
-      tag: initiative.tag,
+      initiative: initiative?.title,
+      tag: initiative?.tag,
     },
     image: image,
     collection: {
-      name: initiative.title,
+      name: initiative?.title,
       family: 'thebettermint collection',
     },
     attributes: [
       {
-        name: tier?.name,
+        name: tier?.title,
         description: tier?.description,
         amount: {
           issuer: counterparty,
