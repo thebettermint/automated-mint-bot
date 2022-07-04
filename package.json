@@ -9,13 +9,21 @@
   "private": true,
   "scripts": {
     "jest": "jest",
-    "jest:class": "jest class.test.ts",
-    "jest:obj": "jest obj.test.ts",
+    "jest:array-address": "jest -t 'registry array-address'",
+    "jest:org-by-ein": "jest -t 'registry org-by-ein'",
+    "jest:wallet-by-ein": "jest -t 'registry wallet-by-ein'",
+    "jest:init-by-tag": "jest -t 'registry init-by-tag'",
+    "jest:tier-by-amount": "jest -t 'registry tier-by-amount'",
+    "jest:asset-by-amount": "jest -t 'registry asset-by-amount'",
+    "jest:parse-0": "jest -t 'credit parse-0'",
+    "jest:parse-1": "jest -t 'credit parse-1'",
+    "jest:parse-2": "jest -t 'credit parse-2'",
+    "jest:parse-3": "jest -t 'credit parse-3'",
+    "jest:wrong-dest": "jest -t 'credit wrong-dest'",
     "c": "rimraf ./dist && tsc && cp .env ./dist/.env",
     "start:api": "node ./dist/src/api/index.js",
     "start:bot": "node ./dist/src/index.js",
-    "start": "npm run start:api & npm run start:bot",
-    "test:base": "CONFIG_ENV=base node ./scripts/test.js && tsc && jest"
+    "start": "npm run start:api & npm run start:bot"
   },
   "scriptsComments": {
     "c": "Compiles typescript",
@@ -24,7 +32,7 @@
     "test:all": "Runs test compiles and unit test for all configurations within ./config directory"
   },
   "dependencies": {
-    "@thebettermint/registry": "0.0.5",
+    "@thebettermint/registry": "0.1.2",
     "@thebettermint/tsconfig": "0.0.3",
     "@thebettermint/xrpl-tx-parser": "0.0.6",
     "apollo-server-core": "^3.9.0",
