@@ -1,12 +1,13 @@
-import json from '@thebettermint/registry/src/registry.json';
+import json from '@thebettermint/registry';
 import lib from './lib';
 
 import Client, { constants } from '@thebettermint/xrpl-tx-parser';
 import config from '../config/config.json';
 import parse from './lib/parse';
-import ipfs from './lib/utils/ipfs';
+import ipfs from './lib/ipfs';
 import x from './lib/xrpl';
 import linkService from './lib/services/link.service';
+import { PaymentInterface } from '../types/parser';
 
 const main = () => {
   const registryAddresses = lib.registry.getAddressArrayRegistry(json);
@@ -22,7 +23,7 @@ const main = () => {
   let events = constants.wsStatusMessages;
 
   api.once(events.connected, () => _onConnected());
-  api.on(events.tx, (e: any) => _onTx(e));
+  api.on(events.tx, (e: PaymentInterface) => _onTx(e));
   api.once(events.closed, () => _onClose());
   api.on(events.reconnect, () => _onReconnect());
   api.on(events.timeout, () => _onTimeout());
@@ -33,7 +34,7 @@ const main = () => {
     console.log(events.connected);
   };
 
-  const _onTx = async (e: any) => {
+  const _onTx = async (e: PaymentInterface) => {
     let meta = parse.TXtoCreditMetadata(e);
     if (!meta) return;
     let hash = await ipfs.handleUploadToIpfs(meta);
