@@ -12,10 +12,18 @@ export type TxParserInterface =
   | modTransactionEntryResponse;
 
 export interface PaymentInterface extends Object {
-  source?: string;
-  destination?: string;
-  source_balance_changes: { currency?: string }[];
-  destination_balance_changes?: string[];
+  source: string;
+  destination: string;
+  source_balance_changes: {
+    currency: string;
+    value: string;
+    counterparty: string;
+  }[];
+  destination_balance_changes: {
+    currency: string;
+    value: string;
+    counterparty: string;
+  }[];
   currency?: string;
   amount?: string;
   destination_tag?: number;
@@ -26,9 +34,9 @@ export interface PaymentInterface extends Object {
   source_currency?: string;
   issuer?: string;
   fee?: string;
-  ledger_index?: Number;
-  tx_index?: Number;
-  time?: Number;
-  tx_hash?: string;
+  ledger_index?: number;
+  tx_index?: number;
+  time: number;
+  tx_hash: string;
   client?: string;
 }

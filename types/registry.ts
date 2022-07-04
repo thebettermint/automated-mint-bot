@@ -1,3 +1,14 @@
+export interface TierObj {
+  title: string;
+  description: string;
+  amount: {
+    currency: string;
+    issuer: string;
+    value: number;
+  };
+  asset: string;
+}
+
 export interface Initiative {
   title: string;
   description: string;
@@ -5,6 +16,8 @@ export interface Initiative {
   XAddress: string;
   start: number;
   end: number;
+  tiers: TierObj[];
+  defaultAsset: string;
 }
 
 export interface RegistryEntry {
