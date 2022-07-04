@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://yourdomain.com/schemas/xrartschema.json",
+  "$id": "https://ipfs.thebettermint.dev/ipfs/Qmewr341234123489123749812734",
   "type": "object",
-  "required": ["schema", "type", "name", "description", "image"],
+  "required": ["schema", "type", "name", "description"],
   "properties": {
     "schema": {
       "type": "string",
