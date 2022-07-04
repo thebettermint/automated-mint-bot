@@ -1,13 +1,7 @@
 /* import fs from 'fs'; */
 import { spawnSync } from 'child_process';
-/* import registryJson from "@thebettermint/registry/src/registry.json" */
-import {
-  Registry,
-  RegistryArray,
-  Head,
-  RegistryEntry,
-  Initiative,
-} from '../../../types';
+import Registry from '@thebettermint/registry/dist/types/Registry';
+import { RegistryEntry, Initiative, TierObj } from '../../../types';
 
 /**
  * registryOrganizations
@@ -17,16 +11,10 @@ import {
  * @return { { name, ein }[] } - Array of organization name and ein
  */
 export const getRegistryOrganizations = (json: Registry) => {
-  const registry = json
-    .map((obj: RegistryArray | Head) => {
-      if ('registry' in obj) return obj.registry;
-      return undefined;
-    })
-    .filter(Boolean);
+  const registry = json['organizations'];
+  if (!registry) return;
 
-  if (!registry || registry[0] === undefined) return;
-
-  let parsedArray = registry[0]
+  let parsedArray = registry
     .map((org: RegistryEntry | undefined) => {
       if (!org) return;
       return { name: org.name, ein: org.EIN };
@@ -46,16 +34,10 @@ export const getRegistryOrganizations = (json: Registry) => {
  */
 export const getOrganizationAddress = (json: Registry, ein: string) => {
   try {
-    const registry = json
-      .map((obj: RegistryArray | Head) => {
-        if ('registry' in obj) return obj.registry;
-        return undefined;
-      })
-      .filter(Boolean);
+    const registry = json['organizations'];
+    if (!registry) return;
 
-    if (!registry || registry[0] === undefined) return;
-
-    let filtered = registry[0].filter((org: RegistryEntry | undefined) => {
+    let filtered = registry.filter((org: RegistryEntry | undefined) => {
       return ein === org?.EIN;
     });
 
@@ -88,16 +70,10 @@ export const getOrganizationInitiative = () => {};
  */
 export const getOrganizationDetailsByEIN = (json: Registry, ein: string) => {
   try {
-    const registry = json
-      .map((obj: RegistryArray | Head) => {
-        if ('registry' in obj) return obj.registry;
-        return undefined;
-      })
-      .filter(Boolean);
+    const registry = json['organizations'];
+    if (!registry) return;
 
-    if (!registry || registry[0] === undefined) return;
-
-    let filtered = registry[0].filter((org: RegistryEntry | undefined) => {
+    let filtered = registry.filter((org: RegistryEntry | undefined) => {
       return ein === org?.EIN;
     });
 
@@ -122,16 +98,10 @@ export const getOrganizationDetailsByEIN = (json: Registry, ein: string) => {
  */
 export const getEINArrayRegistry = (json: Registry) => {
   try {
-    const registry = json
-      .map((obj: RegistryArray | Head) => {
-        if ('registry' in obj) return obj.registry;
-        return undefined;
-      })
-      .filter(Boolean);
+    const registry = json['organizations'];
+    if (!registry) return;
 
-    if (!registry || registry[0] === undefined) return;
-
-    let einArray = registry[0]
+    let einArray = registry
       .map((org: RegistryEntry | undefined) => {
         return org?.EIN;
       })
@@ -157,16 +127,10 @@ export const getEINArrayRegistry = (json: Registry) => {
  */
 export const getAddressArrayRegistry = (json: Registry) => {
   try {
-    const registry = json
-      .map((obj: RegistryArray | Head) => {
-        if ('registry' in obj) return obj.registry;
-        return undefined;
-      })
-      .filter(Boolean);
+    const registry = json['organizations'];
+    if (!registry) return;
 
-    if (!registry || registry[0] === undefined) return;
-
-    let addressArray = registry[0]
+    let addressArray = registry
       .map((org: RegistryEntry | undefined) => {
         return org?.address;
       })
@@ -210,19 +174,13 @@ export const determineVersionOfRegistry = () => {
  */
 export const getOrganizationDetailsByAddress = (
   json: Registry,
-  address: string
+  address: string | undefined
 ) => {
   try {
-    const registry = json
-      .map((obj: RegistryArray | Head) => {
-        if ('registry' in obj) return obj.registry;
-        return undefined;
-      })
-      .filter(Boolean);
+    const registry = json['organizations'];
+    if (!registry) return;
 
-    if (!registry || registry[0] === undefined) return;
-
-    let filtered = registry[0].filter((org: RegistryEntry | undefined) => {
+    let filtered = registry.filter((org: RegistryEntry | undefined) => {
       return address === org?.address;
     });
 
@@ -246,11 +204,16 @@ export const getOrganizationDetailsByAddress = (
  *
  * @return { RegistryEntry } - Organization's registry entry
  */
-export const getInitiativeByTag = (initiatives: any, tag: number) => {
+export const getInitiativeByTag = (
+  initiatives: Initiative[],
+  tag: number | undefined
+) => {
   try {
     let filtered = initiatives.filter((init: Initiative | undefined) => {
       return tag === init?.tag;
     });
+
+    if (filtered.length === 0) throw Error('Destination tag not found');
 
     if (filtered.length > 1)
       throw Error(
@@ -273,26 +236,35 @@ export const getInitiativeByTag = (initiatives: any, tag: number) => {
  * @return { RegistryEntry } - Organization's registry entry
  */
 export const getTierByAmount = (
-  tiers: any,
+  tiers: TierObj[] | undefined,
   amount: { counterparty: string; currency: string; value: string }
 ) => {
   try {
+    if (!tiers || tiers.length === 0) return;
     let { counterparty, currency, value } = amount;
     let parsedValue = parseFloat(value);
 
     let filtered = tiers
-      .map((tier: any | undefined) => {
+      .map((tier: TierObj) => {
         if (
           currency === tier.amount.currency &&
           counterparty === tier.amount.issuer &&
-          parsedValue > tier.amount.value
+          parsedValue >= tier.amount.value
         )
           return tier;
         return;
       })
       .filter(Boolean);
 
-    return filtered;
+    if (filtered.length === 0) return;
+
+    let sorted = filtered.sort((a, b) => {
+      if (!a) return 1;
+      if (!b) return -1;
+      return b?.amount.value - a?.amount.value;
+    });
+
+    return sorted[0];
   } catch (error: any) {
     return;
   }
@@ -311,8 +283,8 @@ export const getAssetByDonationAmount = ({
   initiative,
   amount,
 }: {
-  organization: any;
-  initiative: any;
+  organization: RegistryEntry;
+  initiative: Initiative | undefined;
   amount: { counterparty: string; currency: string; value: string };
 }) => {
   try {
@@ -324,9 +296,9 @@ export const getAssetByDonationAmount = ({
       return organization.image;
 
     if (initiative.tiers) {
-      let tier = getTierByAmount(initiative.tiers, amount);
-      if (tier[0]) return tier[0].asset;
-      if (!tier[0]) return initiative.defaultAsset;
+      let tier: TierObj | undefined = getTierByAmount(initiative.tiers, amount);
+      if (tier) return tier.asset;
+      if (!tier) return initiative.defaultAsset;
     }
     throw Error('Trouble getting image for donation');
   } catch (error: any) {
