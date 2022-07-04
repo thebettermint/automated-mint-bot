@@ -1,7 +1,11 @@
 /* import fs from 'fs'; */
 import { spawnSync } from 'child_process';
-import Registry from '@thebettermint/registry/dist/types/Registry';
-import { RegistryEntry, Initiative, TierObj } from '../../../types';
+import {
+  Registry,
+  Initiative,
+  Tier,
+  Organization,
+} from '@thebettermint/registry';
 
 /**
  * registryOrganizations
@@ -15,7 +19,7 @@ export const getRegistryOrganizations = (json: Registry) => {
   if (!registry) return;
 
   let parsedArray = registry
-    .map((org: RegistryEntry | undefined) => {
+    .map((org: Organization | undefined) => {
       if (!org) return;
       return { name: org.name, ein: org.EIN };
     })
@@ -37,7 +41,7 @@ export const getOrganizationAddress = (json: Registry, ein: string) => {
     const registry = json['organizations'];
     if (!registry) return;
 
-    let filtered = registry.filter((org: RegistryEntry | undefined) => {
+    let filtered = registry.filter((org: Organization | undefined) => {
       return ein === org?.EIN;
     });
 
@@ -66,14 +70,14 @@ export const getOrganizationInitiative = () => {};
  * @param { Registry } json - Total registry including document head
  * @param { string } ein - Employer identifcation number of organization
  *
- * @return { RegistryEntry } - Organization's registry entry
+ * @return { Organization } - Organization's registry entry
  */
 export const getOrganizationDetailsByEIN = (json: Registry, ein: string) => {
   try {
     const registry = json['organizations'];
     if (!registry) return;
 
-    let filtered = registry.filter((org: RegistryEntry | undefined) => {
+    let filtered = registry.filter((org: Organization | undefined) => {
       return ein === org?.EIN;
     });
 
@@ -102,7 +106,7 @@ export const getEINArrayRegistry = (json: Registry) => {
     if (!registry) return;
 
     let einArray = registry
-      .map((org: RegistryEntry | undefined) => {
+      .map((org: Organization | undefined) => {
         return org?.EIN;
       })
       .filter(Boolean);
@@ -131,7 +135,7 @@ export const getAddressArrayRegistry = (json: Registry) => {
     if (!registry) return;
 
     let addressArray = registry
-      .map((org: RegistryEntry | undefined) => {
+      .map((org: Organization | undefined) => {
         return org?.address;
       })
       .filter(Boolean);
@@ -170,7 +174,7 @@ export const determineVersionOfRegistry = () => {
  * @param { Registry } json - Total registry including document head
  * @param { string } ein - Employer identifcation number of organization
  *
- * @return { RegistryEntry } - Organization's registry entry
+ * @return { Organization } - Organization's registry entry
  */
 export const getOrganizationDetailsByAddress = (
   json: Registry,
@@ -180,7 +184,7 @@ export const getOrganizationDetailsByAddress = (
     const registry = json['organizations'];
     if (!registry) return;
 
-    let filtered = registry.filter((org: RegistryEntry | undefined) => {
+    let filtered = registry.filter((org: Organization | undefined) => {
       return address === org?.address;
     });
 
@@ -202,7 +206,7 @@ export const getOrganizationDetailsByAddress = (
  * @param { Registry } json - Total registry including document head
  * @param { string } ein - Employer identifcation number of organization
  *
- * @return { RegistryEntry } - Organization's registry entry
+ * @return { Organization } - Organization's registry entry
  */
 export const getInitiativeByTag = (
   initiatives: Initiative[],
@@ -233,10 +237,10 @@ export const getInitiativeByTag = (
  * @param { Registry } json - Total registry including document head
  * @param { string } ein - Employer identifcation number of organization
  *
- * @return { RegistryEntry } - Organization's registry entry
+ * @return { Organization } - Organization's registry entry
  */
 export const getTierByAmount = (
-  tiers: TierObj[] | undefined,
+  tiers: Tier[] | undefined,
   amount: { counterparty: string; currency: string; value: string }
 ) => {
   try {
@@ -245,7 +249,7 @@ export const getTierByAmount = (
     let parsedValue = parseFloat(value);
 
     let filtered = tiers
-      .map((tier: TierObj) => {
+      .map((tier: Tier) => {
         if (
           currency === tier.amount.currency &&
           counterparty === tier.amount.issuer &&
@@ -276,14 +280,14 @@ export const getTierByAmount = (
  * @param { Registry } json - Total registry including document head
  * @param { string } ein - Employer identifcation number of organization
  *
- * @return { RegistryEntry } - Organization's registry entry
+ * @return { Organization } - Organization's registry entry
  */
 export const getAssetByDonationAmount = ({
   organization,
   initiative,
   amount,
 }: {
-  organization: RegistryEntry;
+  organization: Organization;
   initiative: Initiative | undefined;
   amount: { counterparty: string; currency: string; value: string };
 }) => {
@@ -296,7 +300,7 @@ export const getAssetByDonationAmount = ({
       return organization.image;
 
     if (initiative.tiers) {
-      let tier: TierObj | undefined = getTierByAmount(initiative.tiers, amount);
+      let tier: Tier | undefined = getTierByAmount(initiative.tiers, amount);
       if (tier) return tier.asset;
       if (!tier) return initiative.defaultAsset;
     }
