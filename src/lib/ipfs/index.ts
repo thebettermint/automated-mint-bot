@@ -2,6 +2,7 @@ import FormData from 'form-data';
 import axios from 'axios';
 import env from '../helpers/env';
 import fs from 'fs';
+/* import { getAssetFromExternal } from '../helpers/axios'; */
 
 const ipfs_domain = env['IPFS_DOMAIN'];
 const ipfs_port = env['IPFS_PORT'];
@@ -60,19 +61,20 @@ const ipfsAddMeta = async (json: any) => {
 };
 
 const handleUploadToIpfs = async (meta: any) => {
-  let assetPath = require.resolve(
-    `@thebettermint/registry/${meta.image.replace(
-      'https://github.com/thebettermint/registry/blob/main/',
-      ''
-    )}`
-  );
+  let path = `@thebettermint/registry/${meta.image.replace(
+    'https://github.com/thebettermint/registry/blob/main/',
+    ''
+  )}`.replace('?raw=true', '');
+  let assetPath = require.resolve(path);
 
   let buffer = fs.readFileSync(assetPath);
+  //let buffer = await getAssetFromExternal(meta.image);
+
   let image = await ipfsAddFile({ image: buffer });
   let file = await ipfsAddFile({ json: JSON.stringify(meta.file) });
 
   let template = {
-    schema: 'https://ipfs.whirled.io/14381274987132894078913278946187469123',
+    schema: 'https://ipfs.thebettermint.dev/ipfs/Qmewr341234123489123749812734',
     nftType: 'thebettermint.taxCred.v0',
     name: 'Tax Credit NFT',
     description:
