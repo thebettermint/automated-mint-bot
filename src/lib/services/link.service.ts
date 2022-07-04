@@ -2,15 +2,15 @@ import db from '../helpers/db';
 
 const add = async (params: {
   hash: String;
-  tokenId: String;
-  offerId: String;
+  tokenId: String | undefined;
+  offerId: String | undefined;
 }) => {
   // create link object
   const link = new db.Link(params);
   // save link
   await link.save();
 
-  console.log('saved to db');
+  console.log('tokenId and offerId saved to db');
   return link;
 };
 
