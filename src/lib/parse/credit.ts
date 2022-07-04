@@ -11,7 +11,7 @@ export const TXtoCreditMetadata = (tx: PaymentInterface) => {
   if (organization instanceof Error || !organization) return;
 
   let initiative = lib.registry.getInitiativeByTag(
-    organization.initatives,
+    organization.initiatives,
     tx.destination_tag
   );
 
