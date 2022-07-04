@@ -35,23 +35,31 @@ const main = () => {
   };
 
   const _onTx = async (e: PaymentInterface) => {
+    console.log(`${e.destination} received payment from ${e.source}`);
+    console.log(`Processing upload to IPFS`);
     let meta = parse.TXtoCreditMetadata(e);
     if (!meta) return;
     let hash = await ipfs.handleUploadToIpfs(meta);
-    console.log(hash);
-    let nft = await x.nftCreate({ api: api.ws, uri: hash });
+    console.log(`IPFS Upload Successful. CID: ${hash}`);
+    let nft = await x.nftCreate({ api: api.ws, uri: `ipfs://${hash}` });
+
+    let id: string | undefined;
     if (!nft) return;
 
-    let id = await x.nftTransfer({
-      api: api.ws,
-      destination: meta.file.donor,
-      id: nft[1],
-    });
+    if (nft && nft[1])
+      id = await x.nftTransfer({
+        api: api.ws,
+        destination: meta.file.donor,
+        id: nft[1],
+      });
+
+    console.log(`XRPL tokenMint and offerCreate complete`);
     console.log({
       hash: meta.file.hash,
       tokenId: nft[1],
       offerId: id,
     });
+
     linkService.add({
       hash: meta.file.hash,
       tokenId: nft[1],
