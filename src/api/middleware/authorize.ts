@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import env from '../helpers/env';
+import config from '../../../config';
 
 declare global {
   namespace Express {
@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-const secret = env['API_SECRET'] || '';
+const secret = config.api.secret;
 
 const bearer = async (req: Request, res: Response, next: NextFunction) => {
   let token = req.headers['x-access-token'] || req.headers['authorization'];
