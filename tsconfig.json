@@ -1,15 +1,122 @@
 {
-  "extends": "@thebettermint/tsconfig",
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Base Template",
   "exclude": ["node_modules"],
-  "include": ["./src/**/*", "./types/**/*", "./config/config.json"],
+  "include": [
+    "src/**/*",
+    "src/assets/**/*",
+    "types/**/*",
+    "config/**/*",
+    "config/**/*.json"
+  ],
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "./dist",
-    "noImplicitAny": false,
-    "noEmit": false,
-    "tsBuildInfoFile": "./dist/tsbuildinfo",
+    "noImplicitAny": true,
+
     "declaration": true,
-    "declarationDir": "./dist",
-    "sourceMap": true
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+
+    "allowUnreachableCode": true,
+    "allowUnusedLabels": false,
+    "strict": true,
+    "alwaysStrict": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+
+    "module": "commonjs",
+    "allowUmdGlobalAccess": false,
+    "baseUrl": ".",
+    "moduleResolution": "node",
+    "noResolve": false,
+
+    "paths": {
+      "@/lib/*": ["src/lib/*"],
+      "@/controller/*": ["src/api/controller/*"],
+      "@/api/*": ["src/api/*"],
+      "@/config/*": ["config/*"]
+    },
+
+    "resolveJsonModule": true,
+    "types": ["jest", "node"],
+
+    "declarationMap": false,
+    "declarationDir": "dist/types",
+    "downlevelIteration": false,
+    "emitBOM": false,
+    "emitDeclarationOnly": false,
+    "importHelpers": false,
+    "importsNotUsedAsValues": "remove",
+    "inlineSourceMap": false,
+    "inlineSources": false,
+    "noEmit": false,
+    "noEmitHelpers": false,
+    "noEmitOnError": false,
+    "preserveConstEnums": false,
+    "removeComments": false,
+    "stripInternal": false,
+    "sourceMap": false,
+
+    "allowJs": true,
+    "checkJs": true,
+    "maxNodeModuleJsDepth": 0,
+
+    "disableSizeLimit": false,
+    "plugins": [
+      { "name": "typescript-styled-plugin" },
+      { "name": "typescript-eslint-language-service" }
+    ],
+
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": false,
+    "preserveSymlinks": false,
+
+    "noImplicitUseStrict": false,
+    "noStrictGenericChecks": false,
+    "suppressExcessPropertyErrors": false,
+    "suppressImplicitAnyIndexErrors": false,
+
+    "emitDecoratorMetadata": false,
+    "experimentalDecorators": false,
+    "jsx": "react",
+    "jsxFactory": "React.createElement",
+    "jsxFragmentFactory": "React.Fragment",
+    "lib": ["DOM", "ESNext"],
+    "noLib": false,
+    "target": "ES6",
+    "useDefineForClassFields": false,
+
+    "diagnostics": true,
+    "explainFiles": false,
+    "extendedDiagnostics": false,
+    "generateCpuProfile": "profile.cpuprofile",
+    "listEmittedFiles": false,
+    "listFiles": false,
+    "traceResolution": false,
+
+    "composite": true,
+    "disableReferencedProjectLoad": false,
+    "disableSolutionSearching": false,
+    "disableSourceOfProjectReferenceRedirect": false,
+    "incremental": true,
+
+    "noErrorTruncation": false,
+    "preserveWatchOutput": false,
+    "pretty": true,
+
+    "skipLibCheck": true,
+
+    "assumeChangesOnlyAffectDirectDependencies": true
   }
 }
