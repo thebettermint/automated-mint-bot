@@ -6,9 +6,7 @@ import {
   Client,
 } from 'xrpl';
 
-import env from '../helpers/env';
-
-const key = env['ISSUER_SECRET'];
+import config from '../../../config';
 
 export const nftCreate = async ({
   api,
@@ -18,9 +16,9 @@ export const nftCreate = async ({
   uri: string;
   flags?: number;
 }) => {
-  if (!key) return;
+  if (!config.wallet.secret) throw Error('Issuing wallet not found');
   try {
-    let signer = Wallet.fromSecret(key);
+    let signer = Wallet.fromSecret(config.wallet.secret);
 
     let transaction: NFTokenMint = {
       TransactionType: 'NFTokenMint',
@@ -60,7 +58,6 @@ export const nftCreate = async ({
     let tx = await api.submitAndWait(transaction, opts);
     let hash = tx.result.hash;
 
-    console.log(hash);
     if (
       tx &&
       tx.result.meta &&
@@ -89,7 +86,7 @@ export const nftCreate = async ({
 
       return [hash, id ? id[0][0] : null];
     }
-    return;
+    throw Error('Something went wrong during mint');
   } catch (error: any) {
     return Error(error.message);
   }

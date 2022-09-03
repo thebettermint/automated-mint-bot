@@ -5,9 +5,7 @@ import {
   NFTokenCreateOffer,
 } from 'xrpl';
 
-import env from '../helpers/env';
-
-const key = env['ISSUER_SECRET'];
+import config from '../../../config';
 
 export const nftTransfer = async ({
   api,
@@ -18,9 +16,9 @@ export const nftTransfer = async ({
   destination: string;
   id: string;
 }) => {
-  if (!key) return;
+  if (!config.wallet.secret) throw Error('Issuing wallet not found');
   try {
-    let signer = Wallet.fromSecret(key);
+    let signer = Wallet.fromSecret(config.wallet.secret);
 
     let transaction: NFTokenCreateOffer = {
       TransactionType: 'NFTokenCreateOffer',
@@ -53,6 +51,7 @@ export const nftTransfer = async ({
 
     return OfferId[0];
   } catch (error: any) {
+    console.log(error);
     return Error(error.message);
   }
 };

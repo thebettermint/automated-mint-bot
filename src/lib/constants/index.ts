@@ -12,3 +12,7 @@ export const wsStatusMessages = {
 
 export const serverURL = 'wss://xls20-sandbox.rippletest.net:51233';
 export const mainServerURL = 'wss://s1.ripple.com/';
+
+export const origins = [`http://localhost:4005`];
+
+export const routes = ['/link/*', '/ping/*'];
