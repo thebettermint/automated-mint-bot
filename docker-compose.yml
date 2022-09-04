@@ -28,3 +28,8 @@ services:
     environment:
       IPFS_PROFILE: 'server'
       IPFS_PATH: '/data/ipfs'
+
+networks:
+  default:
+    name: xrpl-mint-bot_default
+    external: true
