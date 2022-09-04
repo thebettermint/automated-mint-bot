@@ -5,4 +5,4 @@ import { wsServer } from './bot/monitor/ws';
 apiServer();
 
 // Start WS server
-wsServer;
+wsServer._init();

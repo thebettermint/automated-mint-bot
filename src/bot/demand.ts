@@ -5,7 +5,6 @@ import apexService from '../db/services/apex.service';
 import path from 'path';
 import { processQRCode } from '../lib/qr';
 import { processOverlay } from '../lib/sharp';
-import uuid from 'node-uuid';
 
 import { wsServer } from '../bot/monitor/ws';
 
@@ -57,7 +56,8 @@ const onDemand = async ({ address }: { address: string }) => {
 
     dbAsset.tokenId = nft[1];
     dbAsset.offerId = offerId;
-    dbAsset.state = 'offered';
+    dbAsset.status = 'offered';
+    dbAsset.offeredAt = new Date(Date.now());
     dbAsset.updatedAt = new Date(Date.now());
 
     await dbAsset.save();

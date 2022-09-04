@@ -1,21 +1,24 @@
 import config from '../../../config';
 
 export class WS {
+  [index: string]: any;
   wss: any;
   peerSockets: any;
-  constructor() {
+
+  constructor() {}
+
+  _init = () => {
     const WebSocket = require('ws');
-    this.peerSockets = {};
     this.wss = new WebSocket.Server({ port: config.ws.port });
     this.wss.on('connection', (socket: any) =>
       this._onConnection(new Peer(socket))
     );
     console.log('The websocket is running and listening for requests');
-  }
+  };
 
   _onConnection = (peer: any) => {
     peer.socket.on('message', (message: any) => this._onMessage(peer, message));
-    this._keepAlive(peer);
+    //this._keepAlive(peer);
     console.log(`New peer ( ${peer.id} )`);
 
     // send displayName
@@ -30,11 +33,12 @@ export class WS {
     // Try to parse message
     try {
       message = JSON.parse(message);
+      console.log(message);
     } catch (e) {
       return; // TODO: handle malformed JSON
     }
 
-    switch (message.type) {
+    switch (message?.type) {
       case 'pong':
         sender.lastBeat = Date.now();
         break;
@@ -100,6 +104,10 @@ export class WS {
   };
 }
 
+// Create a prototype for peer sockets so that they are accessible
+// between all instances of this WS
+WS.prototype.peerSockets = {};
+
 class Peer {
   socket: any;
   id: string;
@@ -141,5 +149,3 @@ class Peer {
 }
 
 export const wsServer = new WS();
-
-wsServer;
