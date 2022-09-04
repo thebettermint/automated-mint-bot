@@ -20,7 +20,16 @@ const schema = new Schema({
     },
   },
   cid: { type: String, default: null },
-  meta: { type: meta, required: true },
+  meta: {
+    type: meta,
+    required: true,
+    default: function getMeta() {
+      return {
+        image: null,
+        json: null,
+      };
+    },
+  },
   status: { type: String, default: 'init', required: true },
   offeredAt: { type: Date, default: null },
   claimedAt: { type: Date, default: null },
