@@ -21,13 +21,13 @@ const getByUUID = async (req: Request, res: Response) => {
 };
 
 const claimed = async (req: Request, res: Response) => {
-  const { uuid } = req.params;
+  const { uuid } = req.body;
   let data = await apexService.updateToClaimed(uuid);
   return res.json(data);
 };
 
 const consumed = async (req: Request, res: Response) => {
-  const { uuid } = req.params;
+  const { uuid } = req.body;
   let data = await apexService.updateToConsumed(uuid);
   return res.json(data);
 };
