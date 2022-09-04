@@ -6,14 +6,38 @@ const add = async (params: { publicAddress: string }) => {
   return asset;
 };
 
-const findOfferByUUID = async (uuid: string) => {
+const findByUUID = async (uuid: string) => {
   const asset: any = await db.Apex.findOne({ uuid: uuid });
   if (!asset) return 'uuid not found in database';
-  const { hash, tokenId, offerId } = asset;
-  return { hash, tokenId, offerId };
+  return asset;
+};
+
+const updateToClaimed = async (uuid: string) => {
+  const asset = await db.Apex.findOne({ uuid: uuid });
+  if (!asset) return 'uuid not found in database';
+  asset.claimedAt = new Date(Date.now());
+  await asset.save();
+  return asset;
+};
+
+const updateToConsumed = async (uuid: string) => {
+  const asset = await db.Apex.findOne({ uuid: uuid });
+  if (!asset) return 'uuid not found in database';
+  asset.consumedAt = new Date(Date.now());
+  await asset.save();
+  return asset;
+};
+
+const findByAddress = async (address: string) => {
+  const asset = await db.Apex.findOne({ publicAddress: address });
+  if (!asset) return 'address not found in database';
+  return asset;
 };
 
 export default {
   add,
-  findOfferByUUID,
+  findByUUID,
+  findByAddress,
+  updateToConsumed,
+  updateToClaimed,
 };

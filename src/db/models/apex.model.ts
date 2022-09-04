@@ -14,7 +14,10 @@ const schema = new Schema({
       return uuid.v4();
     },
   },
-  state: { type: String, default: 'init', required: true },
+  status: { type: String, default: 'init', required: true },
+  offeredAt: { type: Date, default: null },
+  claimedAt: { type: Date, default: null },
+  consumedAt: { type: Date, default: null },
   createdAt: { type: Date, default: Date.now, required: true },
   updatedAt: Date,
 });

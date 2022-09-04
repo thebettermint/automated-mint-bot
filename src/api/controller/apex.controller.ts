@@ -7,29 +7,42 @@ const ping = async (_req: Request, res: Response, _next: NextFunction) => {
   return res.json('pong');
 };
 
-const getOfferId = async (req: Request, res: Response) => {
-  const { uuid } = req.params;
-  let resp = await new Promise(async (resolve) => {
-    let data = await apexService.findOfferByUUID(uuid);
-    resolve(data);
-  });
-
+const getByAddress = async (req: Request, res: Response) => {
+  const { address } = req.params;
+  let resp = await apexService.findByAddress(address);
   return res.json(resp);
+};
+
+const getByUUID = async (req: Request, res: Response) => {
+  const { uuid } = req.params;
+
+  let response = await apexService.findByUUID(uuid);
+  return res.json(response);
+};
+
+const claimed = async (req: Request, res: Response) => {
+  const { uuid } = req.params;
+  let data = await apexService.updateToClaimed(uuid);
+  return res.json(data);
+};
+
+const consumed = async (req: Request, res: Response) => {
+  const { uuid } = req.params;
+  let data = await apexService.updateToConsumed(uuid);
+  return res.json(data);
 };
 
 const ondemand = async (req: Request, res: Response) => {
   const { address } = req.body;
-  let resp = await new Promise(async (resolve, reject) => {
-    let data = await onDemand({ address: address });
-    if (data instanceof Error) reject(data);
-    resolve(data);
-  });
-
-  return res.json(resp);
+  let data = await onDemand({ address: address });
+  return res.json(data);
 };
 
 export default {
   ping,
-  getOfferId,
   ondemand,
+  getByAddress,
+  getByUUID,
+  claimed,
+  consumed,
 };
