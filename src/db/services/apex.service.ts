@@ -16,6 +16,7 @@ const updateToClaimed = async (uuid: string) => {
   const asset = await db.Apex.findOne({ uuid: uuid });
   if (!asset) return 'uuid not found in database';
   asset.claimedAt = new Date(Date.now());
+  asset.status = 'claimed';
   await asset.save();
   return asset;
 };
@@ -24,6 +25,7 @@ const updateToConsumed = async (uuid: string) => {
   const asset = await db.Apex.findOne({ uuid: uuid });
   if (!asset) return 'uuid not found in database';
   asset.consumedAt = new Date(Date.now());
+  asset.status = 'consumed';
   await asset.save();
   return asset;
 };

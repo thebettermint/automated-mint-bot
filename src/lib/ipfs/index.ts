@@ -70,7 +70,7 @@ const handleUploadToIpfs = async (buffer: any) => {
   };
 
   let final = await ipfsAddFile({ json: JSON.stringify(json) });
-  return final.Hash;
+  return [final.Hash, image.Hash];
 };
 
 export default { ipfsAddFile, ipfsAddMeta, handleUploadToIpfs };

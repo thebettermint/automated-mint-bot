@@ -2,6 +2,11 @@ import mongoose from 'mongoose';
 import uuid from 'node-uuid';
 const Schema = mongoose.Schema;
 
+const meta = new Schema({
+  image: { type: String, default: null },
+  json: { type: String, default: null },
+});
+
 const schema = new Schema({
   tokenId: { type: String },
   offerId: { type: String },
@@ -14,6 +19,8 @@ const schema = new Schema({
       return uuid.v4();
     },
   },
+  cid: { type: String, default: null },
+  meta: { type: meta, required: true },
   status: { type: String, default: 'init', required: true },
   offeredAt: { type: Date, default: null },
   claimedAt: { type: Date, default: null },

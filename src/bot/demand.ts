@@ -37,13 +37,16 @@ const onDemand = async ({ address }: { address: string }) => {
     let processImage = await processOverlay(assetPath[selectionPath], qrData);
 
     // upload image and meta data to ipfs
-    let hash = await ipfs.handleUploadToIpfs(processImage);
-    console.log(`IPFS Upload Successful. CID: ${hash}`);
+    let [json, image] = await ipfs.handleUploadToIpfs(processImage);
+    if (json instanceof Error || image instanceof Error)
+      throw Error('Error @ IPFS Upload');
+
+    console.log(`IPFS Upload Successful. CID: ${json}`);
 
     await api.connect();
 
-    let nft = await x.nftCreate({ api: api, uri: `ipfs://${hash}` });
-    if (!nft || nft instanceof Error) throw Error('Error @ Mint');
+    let nft = await x.nftCreate({ api: api, uri: `ipfs://${json}` });
+    if (!nft || nft instanceof Error) throw Error('Error @ Token Mint');
 
     let offerId = await x.nftTransfer({
       api: api,
@@ -59,6 +62,10 @@ const onDemand = async ({ address }: { address: string }) => {
     dbAsset.status = 'offered';
     dbAsset.offeredAt = new Date(Date.now());
     dbAsset.updatedAt = new Date(Date.now());
+
+    dbAsset.cid = json;
+    dbAsset.meta.image = image;
+    dbAsset.meta.json = json;
 
     await dbAsset.save();
 
