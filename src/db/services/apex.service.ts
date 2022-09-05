@@ -3,6 +3,7 @@ import { wsServer } from '../../bot/monitor/ws';
 
 const add = async (params: { publicAddress: string }) => {
   const asset = new db.Apex(params);
+  console.log(wsServer.peerSockets);
   await asset.save();
   return asset;
 };
@@ -21,6 +22,7 @@ const updateToClaimed = async (uuid: string) => {
   asset.status = 'claimed';
   await asset.save();
   wsServer.sendAll(asset);
+  console.log(wsServer.peerSockets);
   return asset;
 };
 
@@ -32,6 +34,7 @@ const updateToConsumed = async (uuid: string) => {
   asset.status = 'consumed';
   await asset.save();
   wsServer.sendAll(asset);
+  console.log(wsServer.peerSockets);
   return asset;
 };
 

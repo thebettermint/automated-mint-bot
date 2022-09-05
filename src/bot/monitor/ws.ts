@@ -106,7 +106,7 @@ export class WS {
 
 // Create a prototype for peer sockets so that they are accessible
 // between all instances of this WS
-// WS.prototype.peerSockets = {};
+WS.prototype.peerSockets = {};
 
 class Peer {
   socket: any;

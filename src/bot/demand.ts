@@ -6,8 +6,6 @@ import path from 'path';
 import { processQRCode } from '../lib/qr';
 import { processOverlay } from '../lib/sharp';
 
-import apexModel from 'src/db/models/apex.model';
-
 import { wsServer } from '../bot/monitor/ws';
 
 const assetPath: any = {
