@@ -55,10 +55,18 @@ export class WS {
 
     message = JSON.stringify(message);
 
+    console.log(this['peerSockets']);
+
     let keys = Object.keys(this['peerSockets']);
+    console.log(keys);
+
     if (!keys || keys.length === 0) return;
+
     keys.map((id: any) => {
-      this['peerSockets'][id].send(message, (error: any) => console.log(error));
+      this['peerSockets'][id].send(message, (error: any) => {
+        if (error) console.log(error, 'error sending message to peer');
+        console.log('message sent');
+      });
     });
   };
 
@@ -66,9 +74,10 @@ export class WS {
     if (!peer) return;
     if (this.wss.readyState !== this.wss.OPEN) return;
     message = JSON.stringify(message);
-    peer.socket.send(message, (error: any) =>
-      console.log(error, 'error sending message to peer')
-    );
+    peer.socket.send(message, (error: any) => {
+      if (error) console.log(error, 'error sending message to peer');
+      console.log('message sent');
+    });
   };
 
   _removePeerSockets = (peer: any) => {
