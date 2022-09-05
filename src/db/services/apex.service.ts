@@ -1,5 +1,5 @@
 import db from '../db';
-import { wsServer } from 'src/bot/monitor/ws';
+import { wsServer } from '../../bot/monitor/ws';
 
 const add = async (params: { publicAddress: string }) => {
   const asset = new db.Apex(params);

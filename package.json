@@ -1,6 +1,6 @@
 {
   "name": "xrpl-mint-bot",
-  "version": "0.0.1-apex",
+  "version": "0.0.2-apex",
   "description": "An automated minting bot for nonfungible tax credits",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
