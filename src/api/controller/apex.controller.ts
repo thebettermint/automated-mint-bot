@@ -21,7 +21,6 @@ const getByAddress = async (req: Request, res: Response) => {
 const getByUUID = async (req: Request, res: Response) => {
   try {
     const { uuid } = req.params;
-
     let response = await apexService.findByUUID(uuid);
     return res.json(response);
   } catch (e) {
