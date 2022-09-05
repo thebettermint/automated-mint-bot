@@ -6,7 +6,9 @@ import path from 'path';
 import { processQRCode } from '../lib/qr';
 import { processOverlay } from '../lib/sharp';
 
-import { wsServer } from '../bot/monitor/ws';
+import { WS } from '../bot/monitor/ws';
+
+const socket = new WS();
 
 const assetPath: any = {
   mock1: path.resolve(config.directory, 'src/api/assets/images/mock1.png'),
@@ -15,8 +17,6 @@ const assetPath: any = {
 
 const onDemand = async ({ address }: { address: string }) => {
   const api = await x.client.init(config.nodes.xrplnft.wss);
-
-  console.log(wsServer.peerSockets);
 
   try {
     let dbAsset = await apexService.add({
@@ -49,6 +49,8 @@ const onDemand = async ({ address }: { address: string }) => {
     let nft = await x.nftCreate({ api: api, uri: `ipfs://${json}` });
     if (!nft || nft instanceof Error) throw Error('Error @ Token Mint');
 
+    socket.sendAll({ type: 'init', status: 'minted', data: dbAsset });
+
     let offerId = await x.nftTransfer({
       api: api,
       destination: address,
@@ -70,7 +72,7 @@ const onDemand = async ({ address }: { address: string }) => {
 
     await dbAsset.save();
 
-    wsServer.sendAll(dbAsset);
+    socket.sendAll({ type: 'update', status: 'offered', data: dbAsset });
 
     return dbAsset;
   } catch (error: any) {

@@ -3,7 +3,6 @@ import config from '../../../config';
 export class WS {
   [index: string]: any;
   wss: any;
-  peerSockets: any;
 
   constructor() {}
 
@@ -13,13 +12,14 @@ export class WS {
     this.wss.on('connection', (socket: any) =>
       this._onConnection(new Peer(socket))
     );
-    console.log('The websocket is running and listening for requests');
+    console.log(
+      `The websocket is running on port ${config.ws.port} and listening for requests`
+    );
   };
 
   _onConnection = (peer: any) => {
     peer.socket.on('message', (message: any) => this._onMessage(peer, message));
-    //this._keepAlive(peer);
-    console.log(`New peer ( ${peer.id} )`);
+    this._keepAlive(peer);
 
     // send displayName
     this._send(peer, {
@@ -33,7 +33,6 @@ export class WS {
     // Try to parse message
     try {
       message = JSON.parse(message);
-      console.log(message);
     } catch (e) {
       return; // TODO: handle malformed JSON
     }
@@ -44,8 +43,8 @@ export class WS {
         break;
       case 'subscribe':
         sender.lastBeat = Date.now();
-        if (this.peerSockets[sender.id]) this._removePeerSockets(sender);
-        this.peerSockets[sender.id] = sender;
+        if (this['peerSockets'][sender.id]) this._removePeerSockets(sender);
+        this['peerSockets'][sender.id] = sender;
         break;
     }
   };
@@ -56,10 +55,10 @@ export class WS {
 
     message = JSON.stringify(message);
 
-    let keys = Object.keys(this.peerSockets);
+    let keys = Object.keys(this['peerSockets']);
     if (!keys || keys.length === 0) return;
     keys.map((id: any) => {
-      this.peerSockets[id].send(message, (error: any) => console.log(error));
+      this['peerSockets'][id].send(message, (error: any) => console.log(error));
     });
   };
 
@@ -75,7 +74,7 @@ export class WS {
   _removePeerSockets = (peer: any) => {
     console.log(`Removing peer from socket( ${peer.id} )`);
     //this.peerSockets[peer.id].forEach((socket: any) => socket.disconnect());
-    delete this.peerSockets[peer.id];
+    delete this['peerSockets'][peer.id];
   };
 
   _keepAlive = (peer: any) => {
@@ -103,10 +102,6 @@ export class WS {
     }
   };
 }
-
-// Create a prototype for peer sockets so that they are accessible
-// between all instances of this WS
-WS.prototype.peerSockets = {};
 
 class Peer {
   socket: any;
@@ -147,5 +142,3 @@ class Peer {
     return uuid;
   }
 }
-
-export const wsServer = new WS();

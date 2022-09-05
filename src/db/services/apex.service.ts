@@ -1,9 +1,10 @@
 import db from '../db';
-import { wsServer } from '../../bot/monitor/ws';
+import { WS } from '../../bot/monitor/ws';
+
+const socket = new WS();
 
 const add = async (params: { publicAddress: string }) => {
   const asset = new db.Apex(params);
-  console.log(wsServer.peerSockets);
   await asset.save();
   return asset;
 };
@@ -21,8 +22,7 @@ const updateToClaimed = async (uuid: string) => {
   asset.claimedAt = new Date(Date.now());
   asset.status = 'claimed';
   await asset.save();
-  wsServer.sendAll(asset);
-  console.log(wsServer.peerSockets);
+  socket.sendAll({ type: 'update', status: 'claimed', data: asset });
   return asset;
 };
 
@@ -33,8 +33,7 @@ const updateToConsumed = async (uuid: string) => {
   asset.consumedAt = new Date(Date.now());
   asset.status = 'consumed';
   await asset.save();
-  wsServer.sendAll(asset);
-  console.log(wsServer.peerSockets);
+  socket.sendAll({ type: 'update', status: 'consumed', data: asset });
   return asset;
 };
 
