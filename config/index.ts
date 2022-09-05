@@ -17,6 +17,7 @@ const nodes = {
 };
 
 export default {
+  version: env['VERSION'],
   run: env['NODE_ENV'],
   email: {
     address: env['EMAIL_ADDR'],
