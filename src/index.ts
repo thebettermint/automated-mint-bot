@@ -1,6 +1,6 @@
 import { apiServer } from './api';
 import { wsServer } from './bot/monitor/ws';
-import config from 'config';
+import config from '../config';
 
 // Start API server
 apiServer();
