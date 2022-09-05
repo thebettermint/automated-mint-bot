@@ -51,7 +51,7 @@ export class WS {
 
   sendAll = (message: any) => {
     if (!message) return;
-    if (this.wss.readyState !== this.wss.OPEN) return;
+    //if (this.wss.readyState !== this.wss.OPEN) return;
 
     message = JSON.stringify(message);
 
