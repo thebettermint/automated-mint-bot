@@ -6,6 +6,8 @@ import path from 'path';
 import { processQRCode } from '../lib/qr';
 import { processOverlay } from '../lib/sharp';
 
+import apexModel from 'src/db/models/apex.model';
+
 import { wsServer } from '../bot/monitor/ws';
 
 const assetPath: any = {
@@ -23,8 +25,9 @@ const onDemand = async ({ address }: { address: string }) => {
       publicAddress: address,
     });
 
-    let assetKeys = Object.keys(assetPath);
-    let selectionPath = assetKeys[Math.floor(Math.random() * assetKeys.length)];
+    let assetKeys: string[] = Object.keys(assetPath);
+    let selectionPath: string =
+      assetKeys[Math.floor(Math.random() * assetKeys.length)];
 
     let qrData = await processQRCode({
       address: address,
@@ -73,8 +76,7 @@ const onDemand = async ({ address }: { address: string }) => {
 
     return dbAsset;
   } catch (error: any) {
-    console.log(error);
-    return Error(error.message);
+    throw Error(error.message);
   } finally {
     api.disconnect();
   }

@@ -4,7 +4,7 @@ export const processOverlay = async (back?: any, fore?: any) => {
   try {
     const metadata = await sharp(back).metadata();
 
-    if (!metadata) throw Error('image not found');
+    if (!metadata) throw Error('Sharp Error: Image not found');
 
     if (metadata && metadata.height) {
       const resize = await sharp(fore)
@@ -24,8 +24,9 @@ export const processOverlay = async (back?: any, fore?: any) => {
         ])
         .toBuffer();
     }
-    throw Error('something went wrong processing images');
+
+    throw Error('Sharp Error: processing error');
   } catch (error: any) {
-    return Error(error.message);
+    throw Error(error.message);
   }
 };

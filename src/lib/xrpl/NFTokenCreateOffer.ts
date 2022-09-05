@@ -16,7 +16,8 @@ export const nftTransfer = async ({
   destination: string;
   id: string;
 }) => {
-  if (!config.wallet.secret) throw Error('Issuing wallet not found');
+  if (!config.wallet.secret)
+    throw Error('OfferCreate Error: Issuing wallet not found');
   try {
     let signer = Wallet.fromSecret(config.wallet.secret);
 
@@ -51,7 +52,6 @@ export const nftTransfer = async ({
 
     return OfferId[0];
   } catch (error: any) {
-    console.log(error);
-    return Error(error.message);
+    throw Error(error.message);
   }
 };

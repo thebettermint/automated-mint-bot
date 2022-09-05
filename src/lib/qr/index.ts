@@ -6,12 +6,16 @@ export const processQRCode = async (params: {
   issuer: string;
   createdAt: Date;
 }) => {
-  let qrData = await QRCode.toDataURL(JSON.stringify(params), {
-    errorCorrectionLevel: 'H',
-  });
+  try {
+    let qrData = await QRCode.toDataURL(JSON.stringify(params), {
+      errorCorrectionLevel: 'H',
+    });
 
-  let data = qrData.split(',')[1];
-  return Buffer.from(data, 'base64');
+    let data = qrData.split(',')[1];
+    return Buffer.from(data, 'base64');
+  } catch (error: any) {
+    throw Error(error.message);
+  }
 };
 
 export const writeQRCode = async (

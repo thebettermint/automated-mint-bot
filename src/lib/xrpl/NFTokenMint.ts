@@ -16,7 +16,8 @@ export const nftCreate = async ({
   uri: string;
   flags?: number;
 }) => {
-  if (!config.wallet.secret) throw Error('Issuing wallet not found');
+  if (!config.wallet.secret)
+    throw Error('Mint Error: Issuing wallet not found');
   try {
     let signer = Wallet.fromSecret(config.wallet.secret);
 
@@ -86,8 +87,9 @@ export const nftCreate = async ({
 
       return [hash, id ? id[0][0] : null];
     }
-    throw Error('Something went wrong during mint');
+
+    throw Error('Mint Error: TokenID not found');
   } catch (error: any) {
-    return Error(error.message);
+    throw Error(error.message);
   }
 };
