@@ -47,6 +47,7 @@ export default {
     port: env['IPFS_PORT'] || '',
   },
   ws: {
+    url: env['WS_URL'] || '',
     port: env['WS_PORT'] || 4001,
   },
   jwt: {

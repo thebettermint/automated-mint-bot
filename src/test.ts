@@ -1,5 +1,6 @@
 import { WS } from './bot/monitor/ws';
 import { WebSocket } from 'ws';
+import config from '../config';
 
 export const test = async () => {
   while (true) {
@@ -14,7 +15,7 @@ export const test = async () => {
 };
 
 export const ws1 = async () => {
-  const ws = new WebSocket('wss://thebettermint.dev/ws');
+  const ws = new WebSocket(config.ws.url);
 
   ws.onopen = () => {
     console.log('WS: server connected');
