@@ -1,5 +1,5 @@
 import config from '../../../config';
-import apexService from 'src/db/services/apex.service';
+import apexService from '../../db/services/apex.service';
 
 export class WS {
   [index: string]: any;
