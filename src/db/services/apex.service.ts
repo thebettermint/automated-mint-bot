@@ -1,6 +1,8 @@
 import db from '../db';
 import { WS } from '../../bot/monitor/ws';
 
+const socket = new WS();
+
 const findAll = async () => {
   let all = await db.Apex.find();
   return all;
@@ -25,7 +27,7 @@ const updateToClaimed = async (uuid: string) => {
   asset.claimedAt = new Date(Date.now());
   asset.status = 'claimed';
   await asset.save();
-  WS.prototype.sendAll({ type: 'update', status: 'claimed', data: asset });
+  socket.sendAll({ type: 'update', status: 'claimed', data: asset });
   return asset;
 };
 
@@ -36,7 +38,7 @@ const updateToConsumed = async (uuid: string) => {
   asset.consumedAt = new Date(Date.now());
   asset.status = 'consumed';
   await asset.save();
-  WS.prototype.sendAll({ type: 'update', status: 'consumed', data: asset });
+  socket.sendAll({ type: 'update', status: 'consumed', data: asset });
   return asset;
 };
 

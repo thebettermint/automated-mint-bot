@@ -5,7 +5,9 @@ export class WS {
   [index: string]: any;
   wss: any;
 
-  constructor() {}
+  constructor() {
+    this.wss = undefined;
+  }
 
   _init = () => {
     const WebSocket = require('ws');
