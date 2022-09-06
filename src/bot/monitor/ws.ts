@@ -1,4 +1,5 @@
 import config from '../../../config';
+import apexService from 'src/db/services/apex.service';
 
 export class WS {
   [index: string]: any;
@@ -17,7 +18,7 @@ export class WS {
     );
   };
 
-  _onConnection = (peer: any) => {
+  _onConnection = async (peer: any) => {
     peer.socket.on('message', (message: any) => this._onMessage(peer, message));
     this._keepAlive(peer);
 
@@ -34,7 +35,11 @@ export class WS {
     try {
       message = JSON.parse(message);
     } catch (e) {
-      return; // TODO: handle malformed JSON
+      return this._send(sender, {
+        type: 'error',
+        msg: 'request malformed',
+        error: e,
+      });
     }
 
     switch (message?.type) {
@@ -45,6 +50,11 @@ export class WS {
         sender.lastBeat = Date.now();
         if (this['peerSockets'][sender.id]) this._removePeerSockets(sender);
         this['peerSockets'][sender.id] = sender;
+        break;
+      case 'history':
+        sender.lastBeat = Date.now();
+        let all = await apexService.findAll();
+        this._send(sender, { type: 'history', data: all });
         break;
     }
   };
@@ -62,7 +72,6 @@ export class WS {
     return keys.map((id: any) => {
       this['peerSockets'][id].socket.send(message, (error: any) => {
         if (error) console.log(error, 'error sending message to peer');
-        console.log('message sent');
       });
     });
   };
@@ -73,7 +82,6 @@ export class WS {
     message = JSON.stringify(message);
     peer.socket.send(message, (error: any) => {
       if (error) console.log(error, 'error sending message to peer');
-      console.log('message sent');
     });
   };
 

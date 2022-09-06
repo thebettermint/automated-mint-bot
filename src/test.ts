@@ -30,12 +30,15 @@ export const ws1 = async () => {
     let response = JSON.parse(e.data);
     console.log('message received', response);
 
+    if (response.type == 'error') return console.log(response);
+
     if (response.type == 'success') return;
+
     if (response.type == 'ping')
       return ws.send(JSON.stringify({ type: 'pong' }));
-    console.log(response);
 
-    return;
+    if (response.type == 'history') return console.log(response);
+    return console.log(response);
   };
 
   ws.onclose = () => console.log('WS: Disconnected');

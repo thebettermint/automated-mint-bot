@@ -3,6 +3,11 @@ import { WS } from '../../bot/monitor/ws';
 
 const socket = new WS();
 
+const findAll = async () => {
+  let all = await db.Apex.find();
+  return all;
+};
+
 const add = async (params: { publicAddress: string }) => {
   const asset = new db.Apex(params);
   await asset.save();
@@ -49,4 +54,5 @@ export default {
   findByAddress,
   updateToConsumed,
   updateToClaimed,
+  findAll,
 };
