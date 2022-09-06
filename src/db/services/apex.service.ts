@@ -1,8 +1,6 @@
 import db from '../db';
 import { WS } from '../../bot/monitor/ws';
 
-const socket = new WS();
-
 const findAll = async () => {
   let all = await db.Apex.find();
   return all;
@@ -21,6 +19,7 @@ const findByUUID = async (uuid: string) => {
 };
 
 const updateToClaimed = async (uuid: string) => {
+  const socket = new WS();
   const asset = await db.Apex.findOne({ uuid: uuid });
   if (!asset) throw Error('uuid not found');
 
@@ -32,6 +31,7 @@ const updateToClaimed = async (uuid: string) => {
 };
 
 const updateToConsumed = async (uuid: string) => {
+  const socket = new WS();
   const asset = await db.Apex.findOne({ uuid: uuid });
   if (!asset) throw Error('uuid not found');
 
