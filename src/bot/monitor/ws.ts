@@ -73,7 +73,8 @@ export class WS {
 
     return keys.map((id: any) => {
       this['peerSockets'][id].socket.send(message, (error: any) => {
-        if (error) console.log(error, 'error sending message to peer');
+        if (error) console.log('');
+        //console.log(error, 'error sending message to peer');
       });
     });
   };
@@ -84,7 +85,8 @@ export class WS {
 
     message = JSON.stringify(message);
     peer.socket.send(message, (error: any) => {
-      if (error) console.log(error, 'error sending message to peer');
+      if (error) console.log('');
+      //console.log(error, 'error sending message to peer');
     });
   };
 

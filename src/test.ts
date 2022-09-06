@@ -22,6 +22,11 @@ export const ws1 = async () => {
     console.log('sending message');
     ws.send(
       JSON.stringify({
+        type: 'history',
+      })
+    );
+    ws.send(
+      JSON.stringify({
         type: 'subscribe',
       })
     );

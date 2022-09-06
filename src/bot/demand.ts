@@ -23,6 +23,8 @@ const onDemand = async ({ address }: { address: string }) => {
       publicAddress: address,
     });
 
+    socket.sendAll({ type: 'init', status: 'init', data: dbAsset });
+
     let assetKeys: string[] = Object.keys(assetPath);
     let selectionPath: string =
       assetKeys[Math.floor(Math.random() * assetKeys.length)];
@@ -49,7 +51,7 @@ const onDemand = async ({ address }: { address: string }) => {
     let nft = await x.nftCreate({ api: api, uri: `ipfs://${json}` });
     if (!nft || nft instanceof Error) throw Error('Error @ Token Mint');
 
-    socket.sendAll({ type: 'init', status: 'minted', data: dbAsset });
+    socket.sendAll({ type: 'update', status: 'minted', data: dbAsset });
 
     let offerId = await x.nftTransfer({
       api: api,
