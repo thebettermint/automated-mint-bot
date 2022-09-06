@@ -80,7 +80,8 @@ export class WS {
 
   _send = (peer: any, message: any) => {
     if (!peer) return;
-    if (this.wss.readyState !== this.wss.OPEN) return;
+    //if (this.wss.readyState !== this.wss.OPEN) return;
+
     message = JSON.stringify(message);
     peer.socket.send(message, (error: any) => {
       if (error) console.log(error, 'error sending message to peer');
@@ -107,8 +108,15 @@ export class WS {
       return;
     }
 
-    this._send(peer, { type: 'ping' });
+    if (this.wss.readyState !== this.wss.OPEN) {
+      this._removePeerSockets(peer);
+      setTimeout(() => {
+        peer.socket.terminate();
+      }, 5000);
+      return;
+    }
 
+    this._send(peer, { type: 'ping' });
     peer.timerId = setTimeout(() => this._keepAlive(peer), timeout);
   };
 
